@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+    <title>On PhpSpec and Not-the-Drupal Way</title>
+
+    <meta name="author" content="Michelle Krejci">
+    <meta name="description" content="">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/night.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+    <style type="text/css">
+
+    ul.inline {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      text-align: center;
+    }
+
+    ul.inline li {
+      display: inline;
+    }
+
+    div.horiz-columns {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-around;
+      flex-wrap: nowrap;
+    }
+    div.horiz-columns.two-col > div,
+    div.horiz-columns.two-col > ul {
+      width: 50%;
+    }
+
+    ul.horiz-list {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-around;
+      flex-wrap: nowrap;
+      list-style-type: none;
+    }
+    ul.horiz-list > li > h3 {
+      text-align: center;
+    }
+
+    .horiz-columns.centered {
+      align-items: center;
+    }
+
+    .reveal ul > ul {
+      margin-top: 2em;
+    }
+
+    img.bdd {
+      width: 70%;
+      height: 70%;
+    }
+
+    img.requirements {
+      border-radius: 10px;
+      width: 90%;
+      height: 90%;
+    }
+
+    img.headshot {
+      border-radius: 10px;
+      width: 30%;
+      height: 30%;
+    }
+    .reveal .highlight {
+      color: #9fc855;
+    }
+
+    .reveal h2 + h3 {
+      color: #9fc855;
+    }
+
+    table.decision-chart {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table.decision-chart,
+    table.decision-chart td,
+    table.decision-chart th {
+      border: 1px solid #9fc855;
+      padding-left: 1em;
+      text-align: left;
+    }
+
+    table.decision-chart th {
+      color: #9fc855;
+    }
+
+    table.decision-chart td {
+      font-size: 0.6em;
+    }
+
+    img.cat {
+      width: 40%;
+      height: 40%;
+    }
+
+    img.pyramid {
+      width: 70%;
+      height: 70%;
+    }
+  </style>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+        <!-- Intro -->
+        <section>
+          <section>
+            <h1>On PhpSpec</h1>
+            <h3>and</h3>
+            <h1>the not the Drupal Way</h1>
+          </section>
+          <section>
+            <h2>Michelle Krejci</h2>
+            <img class="headshot" src="images/michelle_krejci.jpg" alt="Headshot of Michelle Krejci">
+            <p>Engineer</p>
+            <p>@dev_meshev</p>
+            <p>craychee.io</p>
+            <p>github.com/craychee</p>
+          </section>
+          <section>
+            <h1>The Agenda</h1>
+                <ol>
+                  <li>Types of testing</li>
+                  <li>Superiority of Unit Testing</li>
+                  <li>Why PhpSpec?</li>
+                  <li>Demo</li>
+                  <li>Why test?</li>
+                </ol>
+          </section>
+        </section>
+
+        <!-- Types of Testing -->
+        <section>
+          <section>
+            <h1>3 Types of Tests</h1>
+            <p>(for our purposes)</p>
+          </section>
+          <section>
+            <h2>1. Unit Tests</h2>
+            <p>Input generate expected output</p>
+            <p class="fragment">When it fails it can only be for one reason.</p>
+          </section>
+          <section data-transition="none">
+          <small><code data-trim>/PROJECT_ROOT/spec/ExampleSpec.php</code></small>
+            <pre><code data-trim>
+  function it_checks_for_swear_words_in_titles()
+  {
+    $this->shouldThrow('\Exception')->duringCheckClean("must work on ie6");
+    $this->shouldThrow('\Exception')->duringCheckClean("Wordpress is better");
+    $this->shouldThrow('\Exception')->duringCheckClean("php5.2 is cool");
+    $this->shouldNotThrow('\Exception')->duringCheckClean("Test your shit.");
+  }
+            </code></pre>
+          </section>
+          <section>
+            <h2>2. Integration Tests</h2>
+            <p>Interface between compontents</p>
+            <p class="fragment">When it fails handoffs aren't working.</p>
+          </section>
+          <section>
+           <h1>404</h1>
+           <p>No Drupal example found.</p>
+          </section>
+          <section>
+            <h2>3. System Tests</h2>
+            <p>All the pieces together.</p>
+            <p class="fragment">When it fails, it can be for one of a number of reasons.</p>
+          </section>
+          <section data-transition="none">
+          <small><code data-trim>/PROJECT_ROOT/features/bootstrap/ExampleContext.php</code></small>
+            <pre><code>
+    /**
+     * @Then /^I should see the image "([^"]*)"$/
+     */
+    public function assertImagePresent($image)
+    {
+        $imageFound = false;
+        $session = $this->getSession();
+        $imgs = $session->getPage()->findAll('css', 'img');
+
+        // Loop through all the images on the page to see if the image is
+        // present.
+        foreach ($imgs as $img) {
+          $src = $img->getAttribute('src');
+          $srcExplode = explode('/', $src);
+          if (array_search($image, $srcExplode)) {
+            $imageFound = true;
+          }
+        }
+
+        if(!$imageFound) {
+            throw new \Exception(sprintf('The image "%s" was not found on %s.',
+            $image, $session->getCurrentUrl()));
+        }
+    }
+            </code></pre>
+          </section>
+          <section>
+            <h1>Superiority of Unit Tests</h1>
+          </section>
+          <section>
+            <img src="images/testing_coverage_ideal.png" alt="ideal test-coverage">
+            <small>From Mike Cohn, <em>Succeeding with Agile: Software Development Using Scrum</em></small>
+          </section>
+          <section data-transition="none">
+            <img src="images/testing_coverage_actual.png" alt="actual test-coverage">
+          </section>
+          <section data-transition="none">
+            <img src="images/testing_coverage_even_better.png" alt="actual test-coverage">
+          </section>
+          <section data-transition="none">
+            <img src="images/testing_coverage_systems_examples.png" alt="systems examples test-coverage">
+          </section>
+          <section data-transition="none">
+            <img src="images/testing_coverage_unit_examples.png" alt="unit examples test-coverage">
+          </section>
+          <section data-transition="none">
+            <img src="images/economy_tests.png" alt="economy of tests">
+            <small>From everzet's blog,<em>http://everzet.com/post/107204911916/economy-of-tests</em></small>
+          </section>
+          <section data-transition="none">
+            <img class="pyramid" src="images/test_economy_forces.png" alt="economy of tests">
+            <small>From everzet's blog,<em>http://everzet.com/post/107204911916/economy-of-tests</em></small>
+          </section>
+        </section>
+
+        <!-- The Good -->
+        <section>
+          <section>
+            <h1>Why phpSpec?</h1>
+            <p>/Benefits of Behavior Driven Development</p>
+          </section>
+          <section data-background="http://media.tumblr.com/5debbede1fa05013b5b614f3e0ccd535/tumblr_inline_my8bn7Af5g1raprkq.gif">
+            <h2>Understanding BDD</h2>
+          </section>
+          <section data-background="#ff0000" data-transition="none">
+            <p>Client comes to you.</p>
+            <img class="bdd" src="images/what-is-bdd-pt1.png" alt="BDD part 1"/>
+          </section>
+          <section data-background="#ff0000" data-transition="none">
+            <p>Client would like to ship a product.</p>
+            <img class="bdd" src="images/what-is-bdd-pt2.png" alt="BDD part 2"/>
+          </section>
+          <section data-background="#ff0000" data-transition="none">
+            <p>You build a pipeline for the product.</p>
+            <img class="bdd" src="images/what-is-bdd-pt3.png" alt="BDD part 3"/>
+          </section>
+          <section data-background="#ff0000" data-transition="none">
+            <p>You add means to test the product.</p>
+            <img class="bdd" src="images/what-is-bdd-pt4.png" alt="BDD part 4"/>
+          </section>
+          <section data-background="#ff0000" data-transition="none">
+            <p>Maybe you automate that test.</p>
+            <img class="bdd" src="images/what-is-bdd-pt5.png" alt="BDD part 5"/>
+          </section>
+          <section data-background="#ff0000" data-transition="none">
+            <p>You make guesses, but the client is the only one who really knows how the product is supposed to work.</p>
+            <img class="bdd" src="images/what-is-bdd-pt6.png" alt="BDD part 6"/>
+          </section>
+          <section>
+            <h2>Language is everything.</h2>
+          </section>
+          <section>
+            <h2>Define requirements.</h2>
+            <h2>Make those the tests.</h2>
+          </section>
+          <section>
+          <h3>Using a system test,</h3>
+          <h3>we describe the requirements.</h3>
+            <video controls src="videos/behat_demo.mp4"></video>
+          </section>
+          <section>
+          <h3>Using a spec,</h3>
+          <h3>we describe how we will meet the requirements.</h3>
+            <video controls src="videos/phpspec_demo.mp4"></video>
+          </section>
+          <section>
+          <small><code data-trim>/PROJECT_ROOT/spec/TitleValidatorSpec.php</code></small>
+            <code><pre>
+class TitleValidatorSpec extends ObjectBehavior
+{
+  function it_should_define_swears()
+  {
+    $this->getSwears()->shouldHaveValue('ie6');
+    $this->getSwears()->shouldHaveValue('wordpress');
+    $this->getSwears()->shouldHaveValue('php5.2');
+  }
+
+  function it_checks_for_swear_words_in_titles()
+  {
+    $this->shouldThrow('\Exception')->duringCheckClean("We need ie6");
+    $this->shouldThrow('\Exception')->duringCheckClean("MUST HAVE IE6");
+    $this->shouldThrow('\Exception')->duringCheckClean("I like wordpress");
+    $this->shouldThrow('\Exception')->duringCheckClean("PhP5.2 is cool");
+    $this->shouldNotThrow('\Exception')->duringCheckClean("Test your shit.");
+  }
+
+  public function getMatchers()
+  {
+    return [
+      'haveValue' => function($swears, $value) {
+        return in_array($value, $swears);
+      },
+        ];
+  }
+}
+            </code></pre>
+          </section>
+          <section>
+          <small><code data-trim>/PROJECT_ROOT/src/TitleValidator.php</code></small>
+            <code><pre>
+class TitleValidator
+{
+
+  public function checkClean($title)
+  {
+    $title = strtolower($title);
+    $title_parts = explode(' ', $title);
+
+    foreach ($title_parts as $title_part) {
+      if (in_array($title_part, $this->getSwears())) {
+        throw new \Exception('');
+      }
+    }
+  }
+
+  public function getSwears()
+  {
+    return array('ie6', 'wordpress', 'php5.2');
+  }
+}
+            </code></pre>
+          </section>
+          <section>
+          <small><code data-trim>/PROJECT_ROOT/my_validator/my_validator.module</code></small>
+            <code><pre>
+function tcdrupal_title_validator_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['#validate'][] = 'tcdrupal_validation_invoke';
+}
+
+function tcdrupal_validation_invoke($form, &$form_state) {
+}
+            </code></pre>
+          </section>
+          <section data-transition="none">
+          <small><code data-trim>/PROJECT_ROOT/my_validator/my_validator.module</code></small>
+            <code><pre>
+function tcdrupal_title_validator_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['#validate'][] = 'tcdrupal_validation_invoke';
+}
+
+function tcdrupal_validation_invoke($form, &$form_state) {
+  $title = $form_state['input']['title'];
+  $validator = new TitleValidator();
+}
+            </code></pre>
+          </section>
+          <section data-transition="none">
+          <small><code data-trim>/PROJECT_ROOT/my_validator/my_validator.module</code></small>
+            <code><pre>
+ function tcdrupal_title_validator_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['#validate'][] = 'tcdrupal_validation_invoke';
+}
+
+function tcdrupal_validation_invoke($form, &$form_state) {
+  $title = $form_state['input']['title'];
+  $validator = new TitleValidator();
+  try {
+    $validator->checkClean($title);
+  }
+  catch (Exception $e) {
+    form_set_error('clean title', t('Nope.'));
+  }
+}
+           </code></pre>
+          </section>
+          <section>
+            <h2>Putting it all together</h2>
+            <video controls src="videos/final_test_demo.mp4"></video>
+          </section>
+          <section data-background="http://media.tumblr.com/30878c8efef6e404f2fab0662257cd0a/tumblr_inline_nbk8ntSvHQ1raprkq.gif">
+            <h2 class="fragment">At first phpSpec looks like this.</h2>
+          </section>
+          <section data-background="http://i.imgur.com/2foLzsY.gif">
+            <h2>It's more like this.</h2>
+          </section>
+          <section data-background="http://i.imgur.com/tpYS3SX.gif">
+            <h2>Drupal Devs & BDD</h2>
+          </section>
+          <section data-background="#ffffff">
+            <h1 style="color:red" >WARNING</h1>
+            <h3 style="color:gray">This slide may be existential.</h3>
+          </section>
+          <section>
+          <h1>Resources</h1>
+            <ul>
+              <li>phpSpec Documentation http://www.phpspec.net/</li>
+              <li>Everzet's Blog: http://everzet.com</li>
+              <li>Suceeding with Agile by Mike Cohn</li>
+            </ul>
+          <small>@dev_meshev</small>
+          </section>
+        </section>
+
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: false,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
