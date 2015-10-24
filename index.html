@@ -15,7 +15,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/night.css" id="theme">
+		<link rel="stylesheet" href="css/theme/craychee.css" id="theme">
 
 		<!-- Code syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -143,13 +143,12 @@
         <section>
           <section>
             <h1>On PhpSpec</h1>
-            <h3>and</h3>
-            <h1>the not the Drupal Way</h1>
+            <p>and not the Drupal Way</p>
           </section>
           <section>
             <h2>Michelle Krejci</h2>
             <img class="headshot" src="images/michelle_krejci.jpg" alt="Headshot of Michelle Krejci">
-            <p>Engineer</p>
+            <p>QA Engineering Lead @pantheon</p>
             <p>@dev_meshev</p>
             <p>craychee.io</p>
             <p>github.com/craychee</p>
@@ -174,7 +173,7 @@
           </section>
           <section>
             <h2>1. Unit Tests</h2>
-            <p>Input generate expected output</p>
+            <p>Input generate expected output.</p>
             <p class="fragment">When it fails it can only be for one reason.</p>
           </section>
           <section data-transition="none">
@@ -191,8 +190,8 @@
           </section>
           <section>
             <h2>2. Integration Tests</h2>
-            <p>Interface between compontents</p>
-            <p class="fragment">When it fails handoffs aren't working.</p>
+            <p>Interface between compontents.</p>
+            <p class="fragment">When it fails, handoffs aren't working.</p>
           </section>
           <section>
            <h1>404</h1>
@@ -236,27 +235,27 @@
             <h1>Superiority of Unit Tests</h1>
           </section>
           <section>
-            <img src="images/testing_coverage_ideal.png" alt="ideal test-coverage">
+            <img class="none" src="images/testing_coverage_ideal.png" alt="ideal test-coverage">
             <small>From Mike Cohn, <em>Succeeding with Agile: Software Development Using Scrum</em></small>
           </section>
           <section data-transition="none">
-            <img src="images/testing_coverage_actual.png" alt="actual test-coverage">
+            <img class="none" src="images/testing_coverage_actual.png" alt="actual test-coverage">
           </section>
           <section data-transition="none">
-            <img src="images/testing_coverage_even_better.png" alt="actual test-coverage">
+            <img class="none" src="images/testing_coverage_even_better.png" alt="actual test-coverage">
           </section>
           <section data-transition="none">
-            <img src="images/testing_coverage_systems_examples.png" alt="systems examples test-coverage">
+            <img class="none" src="images/testing_coverage_systems_examples.png" alt="systems examples test-coverage">
           </section>
           <section data-transition="none">
-            <img src="images/testing_coverage_unit_examples.png" alt="unit examples test-coverage">
+            <img class="none" src="images/testing_coverage_unit_examples.png" alt="unit examples test-coverage">
           </section>
           <section data-transition="none">
-            <img src="images/economy_tests.png" alt="economy of tests">
+            <img class="none" src="images/economy_tests.png" alt="economy of tests">
             <small>From everzet's blog,<em>http://everzet.com/post/107204911916/economy-of-tests</em></small>
           </section>
           <section data-transition="none">
-            <img class="pyramid" src="images/test_economy_forces.png" alt="economy of tests">
+            <img class="pyramid none" src="images/test_economy_forces.png" alt="economy of tests">
             <small>From everzet's blog,<em>http://everzet.com/post/107204911916/economy-of-tests</em></small>
           </section>
         </section>
@@ -265,33 +264,33 @@
         <section>
           <section>
             <h1>Why phpSpec?</h1>
-            <p>/Benefits of Behavior Driven Development</p>
+            <p>Benefits of Behavior Driven Development</p>
           </section>
           <section data-background="http://media.tumblr.com/5debbede1fa05013b5b614f3e0ccd535/tumblr_inline_my8bn7Af5g1raprkq.gif">
             <h2>Understanding BDD</h2>
           </section>
-          <section data-background="#ff0000" data-transition="none">
-            <p>Client comes to you.</p>
+          <section data-background="#D3D3D3" data-transition="none">
+            <h3>Client comes to you.</h3>
             <img class="bdd" src="images/what-is-bdd-pt1.png" alt="BDD part 1"/>
           </section>
-          <section data-background="#ff0000" data-transition="none">
-            <p>Client would like to ship a product.</p>
+          <section data-background="#D3D3D3" data-transition="none">
+            <h3>Client wants to ship a product.</h3>
             <img class="bdd" src="images/what-is-bdd-pt2.png" alt="BDD part 2"/>
           </section>
-          <section data-background="#ff0000" data-transition="none">
-            <p>You build a pipeline for the product.</p>
+          <section data-background="#D3D3D3" data-transition="none">
+            <h3>You build a pipeline.</h3>
             <img class="bdd" src="images/what-is-bdd-pt3.png" alt="BDD part 3"/>
           </section>
-          <section data-background="#ff0000" data-transition="none">
-            <p>You add means to test the product.</p>
+          <section data-background="#D3D3D3" data-transition="none">
+            <h3>You test the product.</h3>
             <img class="bdd" src="images/what-is-bdd-pt4.png" alt="BDD part 4"/>
           </section>
-          <section data-background="#ff0000" data-transition="none">
-            <p>Maybe you automate that test.</p>
+          <section data-background="#D3D3D3" data-transition="none">
+            <h3>You automate that test.</h3>
             <img class="bdd" src="images/what-is-bdd-pt5.png" alt="BDD part 5"/>
           </section>
-          <section data-background="#ff0000" data-transition="none">
-            <p>You make guesses, but the client is the only one who really knows how the product is supposed to work.</p>
+          <section data-background="#D3D3D3" data-transition="none">
+            <h3>Is it what the client expected?</h3>
             <img class="bdd" src="images/what-is-bdd-pt6.png" alt="BDD part 6"/>
           </section>
           <section>
@@ -411,9 +410,8 @@ function tcdrupal_validation_invoke($form, &$form_state) {
 }
            </code></pre>
           </section>
-          <section>
+          <section data-background-video="videos/final_test_demo.mp4">
             <h2>Putting it all together</h2>
-            <video controls src="videos/final_test_demo.mp4"></video>
           </section>
           <section data-background="http://media.tumblr.com/30878c8efef6e404f2fab0662257cd0a/tumblr_inline_nbk8ntSvHQ1raprkq.gif">
             <h2 class="fragment">At first phpSpec looks like this.</h2>
