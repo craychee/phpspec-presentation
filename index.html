@@ -77,6 +77,11 @@
       height: 70%;
     }
 
+    img.excuses {
+      width: 160%;
+      height: 160%;
+    }
+
     img.requirements {
       border-radius: 10px;
       width: 90%;
@@ -141,17 +146,17 @@
 			<div class="slides">
         <!-- Intro -->
         <section>
-          <section>
+          <section data-background="http://i.imgur.com/tpYS3SX.gif">
             <h1>On PhpSpec</h1>
-            <p>and not the Drupal Way</p>
+            <h6>and not the Drupal Way</h6>
           </section>
           <section>
             <h2>Michelle Krejci</h2>
             <img class="headshot" src="images/michelle_krejci.jpg" alt="Headshot of Michelle Krejci">
-            <p>QA Engineering Lead @pantheon</p>
-            <p>@dev_meshev</p>
-            <p>craychee.io</p>
-            <p>github.com/craychee</p>
+            <p>QA Engineering Lead <a href="https://twitter.com/getpantheon?lang=en">@getpantheon</a></p>
+            <p><a href="https://twitter.com/dev_meshev">@dev_meshev</a></p>
+            <p><a href="http://craychee.io/">craychee.io</a></p>
+            <p><a href="https://github.com/craychee">github.com/craychee</a></p>
           </section>
           <section>
             <h1>The Agenda</h1>
@@ -267,7 +272,7 @@
             <p>Benefits of Behavior Driven Development</p>
           </section>
           <section data-background="http://media.tumblr.com/5debbede1fa05013b5b614f3e0ccd535/tumblr_inline_my8bn7Af5g1raprkq.gif">
-            <h2>Understanding BDD</h2>
+            <h2 class="highlight">Understanding BDD</h2>
           </section>
           <section data-background="#D3D3D3" data-transition="none">
             <h3>Client comes to you.</h3>
@@ -298,17 +303,37 @@
           </section>
           <section>
             <h2>Define requirements.</h2>
-            <h2>Make those the tests.</h2>
+            <h2 class="highlight fragment">Make those the tests.</h2>
           </section>
+         </section>
+
+         <section>
           <section>
+          <h2 class="highlight">Step One:</h2>
           <h3>Using a system test,</h3>
           <h3>we describe the requirements.</h3>
-            <video controls src="videos/behat_demo.mp4"></video>
           </section>
           <section>
+<code><pre>
+Feature: Do not allow swear words in the title.
+  As an editor,
+  I want to be warned when I put a swear word in the title,
+  so that I can maintain my organization's brand.
+
+Scenario:
+  Given I am logged in as a user with the "administrator" role
+  And I am at "node/add/article"
+  When I fill in "title" with "you must work on ie6"
+  And I press "save"
+  Then I should see the text "Nope."
+</code></pre>
+          </section>
+          <section data-background-video="videos/failing_system_test.mp4">
+          </section>
+          <section>
+          <h2 class="highlight">Step Two:</h2>
           <h3>Using a spec,</h3>
           <h3>we describe how we will meet the requirements.</h3>
-            <video controls src="videos/phpspec_demo.mp4"></video>
           </section>
           <section>
           <small><code data-trim>/PROJECT_ROOT/spec/TitleValidatorSpec.php</code></small>
@@ -342,6 +367,13 @@ class TitleValidatorSpec extends ObjectBehavior
 }
             </code></pre>
           </section>
+          <section data-background-video="videos/failing_spec_test.mp4">
+          </section>
+          <section>
+            <h2 class="highlight">Step Three:</h2>
+            <h3>From the spec,</h3>
+            <h3>we write code until the spec is satisfied.</h3>
+          </section>
           <section>
           <small><code data-trim>/PROJECT_ROOT/src/TitleValidator.php</code></small>
             <code><pre>
@@ -367,38 +399,20 @@ class TitleValidator
 }
             </code></pre>
           </section>
+          <section data-background-video="videos/passing_unit_test_failing_system.mp4">
+          </section>
           <section>
-          <small><code data-trim>/PROJECT_ROOT/my_validator/my_validator.module</code></small>
-            <code><pre>
-function tcdrupal_title_validator_form_node_form_alter(&$form, &$form_state, $form_id) {
-  $form['#validate'][] = 'tcdrupal_validation_invoke';
-}
-
-function tcdrupal_validation_invoke($form, &$form_state) {
-}
-            </code></pre>
+            <h2 class="highlight">Step Four:</h2>
+            <h3>Ensure that Drupal invokes code.</h3>
           </section>
           <section data-transition="none">
           <small><code data-trim>/PROJECT_ROOT/my_validator/my_validator.module</code></small>
-            <code><pre>
-function tcdrupal_title_validator_form_node_form_alter(&$form, &$form_state, $form_id) {
-  $form['#validate'][] = 'tcdrupal_validation_invoke';
+<code><pre>
+ function drupal_title_validator_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['#validate'][] = 'drupal_validation_invoke';
 }
 
-function tcdrupal_validation_invoke($form, &$form_state) {
-  $title = $form_state['input']['title'];
-  $validator = new TitleValidator();
-}
-            </code></pre>
-          </section>
-          <section data-transition="none">
-          <small><code data-trim>/PROJECT_ROOT/my_validator/my_validator.module</code></small>
-            <code><pre>
- function tcdrupal_title_validator_form_node_form_alter(&$form, &$form_state, $form_id) {
-  $form['#validate'][] = 'tcdrupal_validation_invoke';
-}
-
-function tcdrupal_validation_invoke($form, &$form_state) {
+function drupal_validation_invoke($form, &$form_state) {
   $title = $form_state['input']['title'];
   $validator = new TitleValidator();
   try {
@@ -408,23 +422,38 @@ function tcdrupal_validation_invoke($form, &$form_state) {
     form_set_error('clean title', t('Nope.'));
   }
 }
-           </code></pre>
+</code></pre>
           </section>
-          <section data-background-video="videos/final_test_demo.mp4">
-            <h2>Putting it all together</h2>
+          <section data-background-video="videos/all_together.mp4">
+          </section>
+        </section>
+
+        <section>
+          <section data-transition="none">
+            <h3>The Cycle of Excuses</h3>
+            <img class="excuses fragment" src="images/excuse_cycle5.png" alt="Cycle of excuses part 4"/>
+          </section>
+          <section data-transition="none">
+            <h3>The Cycle of Excuses</h3>
+            <img class="excuses" src="images/excuse_cycle4.png" alt="Cycle of excuses part 4"/>
+          </section>
+          <section data-transition="none">
+            <h3>The Cycle of Excuses</h3>
+            <img class="excuses" src="images/excuse_cycle3.png" alt="Cycle of excuses part 4"/>
+          </section>
+          <section data-transition="none">
+            <h3>The Cycle of Excuses</h3>
+            <img class="excuses" src="images/excuse_cycle2.png" alt="Cycle of excuses part 4"/>
+          </section>
+          <section data-transition="none">
+            <h3>The Cycle of Excuses</h3>
+            <img class="excuses" src="images/excuse_cycle1.png" alt="Cycle of excuses part 4"/>
           </section>
           <section data-background="http://media.tumblr.com/30878c8efef6e404f2fab0662257cd0a/tumblr_inline_nbk8ntSvHQ1raprkq.gif">
-            <h2 class="fragment">At first phpSpec looks like this.</h2>
+            <h2 class="highlight fragment" style="color:#eee">At first phpSpec looks like this.</h2>
           </section>
           <section data-background="http://i.imgur.com/2foLzsY.gif">
             <h2>It's more like this.</h2>
-          </section>
-          <section data-background="http://i.imgur.com/tpYS3SX.gif">
-            <h2>Drupal Devs & BDD</h2>
-          </section>
-          <section data-background="#ffffff">
-            <h1 style="color:red" >WARNING</h1>
-            <h3 style="color:gray">This slide may be existential.</h3>
           </section>
           <section>
           <h1>Resources</h1>

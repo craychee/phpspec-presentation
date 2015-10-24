@@ -62,6 +62,12 @@ body {
 .reveal h1 {
   text-shadow: none; }
 
+.reveal h1.highlight,
+.reveal h2.highlight,
+.reveal h3.highlight {
+  color: #EFD01B;
+}
+
 /*********************************************
  * OTHER
  *********************************************/
@@ -155,7 +161,7 @@ body {
   display: block;
   padding: 5px;
   overflow: auto;
-  max-height: 400px;
+  max-height: 900px;
   word-wrap: normal; }
 
 .reveal table {
